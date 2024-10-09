@@ -17,4 +17,23 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+
+
+Route::get('/contact', function() {
+    return 'mij niet belluh';
+})->name('contact');
+
+Route::get('/about-us', function() {
+    $company = 'Hogeschool Rotterdam';
+    return view('about-us', [
+        'company' => $company
+    ]);
+})->name('about-us');
+
+Route::get('products/{name}', function(string $name = null) {
+    return view('products', [
+        'name' => $name
+    ]);
+});
+
 require __DIR__.'/auth.php';

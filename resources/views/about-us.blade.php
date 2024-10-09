@@ -8,7 +8,7 @@
     <title>about us</title>
 </head>
 <body>
-<h1>About Mick</h1>
+<h1>About {{$id}}</h1>
 <p>Lorem ipsum...</p>
 
 <a href="{{$url = route('contact')}}">contact</a>

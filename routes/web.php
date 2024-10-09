@@ -37,5 +37,8 @@ Route::get('products/{name}', function(string $name = null) {
     ]);
 });
 
-route::get('/about-us', [AboutUsController::class,'index']);
+route::get('/about-us/{id}', [AboutUsController::class,'index',]);
+
+
+
 require __DIR__.'/auth.php';

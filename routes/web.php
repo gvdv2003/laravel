@@ -42,3 +42,4 @@ route::get('/about-us/{id}', [AboutUsController::class,'index',]);
 
 
 require __DIR__.'/auth.php';
+

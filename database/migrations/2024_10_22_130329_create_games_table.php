@@ -14,8 +14,10 @@ return new class extends Migration
         Schema::create('games', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('year');
             $table->string('description');
+            $table->string('review');
+            $table->string('year');
+            $table->string('created_by');
             $table->timestamps();
         });
     }

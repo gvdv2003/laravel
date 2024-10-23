@@ -9,5 +9,31 @@
 </head>
 <body>
 
+<!-- resources/views/games/edit.blade.php -->
+
+<form action="{{ route('games.update', $game->id) }}" method="POST">
+    @csrf
+    @method('PUT') <!-- Methode om aan te geven dat het een PUT-verzoek is -->
+
+    <div>
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" value="{{ old('name', $game->name) }}" required>
+    </div>
+
+    <div>
+        <label for="description">Description:</label>
+        <textarea id="description" name="description" required>{{ old('description', $game->description) }}</textarea>
+    </div>
+
+    <div>
+        <label for="year">Year:</label>
+        <input type="text" id="year" name="year" value="{{ old('year', $game->year) }}" required>
+    </div>
+
+    <button type="submit">Update Game</button>
+</form>
+
+
+
 </body>
 </html>

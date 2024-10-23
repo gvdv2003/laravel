@@ -12,13 +12,23 @@
 
 
 @foreach($games as $game)
-    <p>{{ $game->name }}</p>
-    <form action="{{ route('games.destroy', $game->id) }}" method="POST" style="display:inline;">
-        @csrf
-        @method('DELETE') <!-- Laravel gebruikt deze methode voor een DELETE-verzoek -->
-        <button type="submit" onclick="return confirm('Weet je zeker dat je deze game wilt verwijderen?')">Delete</button>
-    </form>
+    <div>
+        <h2>{{ $game->name }}</h2>
+        <p>{{ $game->description }}</p>
+        <p>Released in: {{ $game->year }}</p>
+
+        <!-- Link naar de edit-pagina -->
+        <a href="{{ route('games.edit', $game->id) }}">Edit</a>
+
+        <!-- Delete-formulier -->
+        <form action="{{ route('games.destroy', $game->id) }}" method="POST">
+            @csrf
+            @method('DELETE')
+            <button type="submit" onclick="return confirm('Weet je zeker dat je deze game wilt verwijderen?')">Delete</button>
+        </form>
+    </div>
 @endforeach
+
 
 @if(session('success'))
     <div style="color: green;">

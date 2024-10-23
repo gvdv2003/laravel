@@ -8,6 +8,22 @@
     <title>Document</title>
 </head>
 <body>
-{{$data = \App\Models\game::all()}}
+
+
+
+@foreach($games as $game)
+    <p>{{ $game->name }}</p>
+    <form action="{{ route('games.destroy', $game->id) }}" method="POST" style="display:inline;">
+        @csrf
+        @method('DELETE') <!-- Laravel gebruikt deze methode voor een DELETE-verzoek -->
+        <button type="submit" onclick="return confirm('Weet je zeker dat je deze game wilt verwijderen?')">Delete</button>
+    </form>
+@endforeach
+
+@if(session('success'))
+    <div style="color: green;">
+        {{ session('success') }}
+    </div>
+@endif
 </body>
 </html>

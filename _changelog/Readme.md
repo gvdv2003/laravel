@@ -24,3 +24,8 @@
 * opdrachten les 8
 * les 6 inhalen
 * database geupdate
+
+## 2024-10-23
+
+* create pagina gemaakt
+* 

@@ -13,6 +13,11 @@ Route::get('/home', function () {
     return view('home');
 });
 
+Route::get('/create', function () {
+    return view('create');
+});
+Route::post('/posts', [\App\Http\Controllers\PostController::class, 'store'])->name('posts.store');
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');

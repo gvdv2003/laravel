@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AboutUsController;
+use App\Http\Controllers\GameController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -8,15 +9,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/home', function () {
 
-    return view('home');
-});
+Route::resource('/games', GameController::class);
 
-Route::get('/create', function () {
-    return view('create');
-});
-Route::post('/posts', [\App\Http\Controllers\PostController::class, 'store'])->name('posts.store');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -30,16 +25,8 @@ Route::middleware('auth')->group(function () {
 
 
 
-Route::get('/contact', function() {
-    return 'mij niet belluh';
-})->name('contact');
 
-//Route::get('/about-us', function() {
- //   $company = 'Hogeschool Rotterdam';
-   // return view('about-us', [
-     //   'company' => $company
-    //]);
-//})->name('about-us');
+
 
 Route::get('products/{name}', function(string $name = null) {
     return view('products', [

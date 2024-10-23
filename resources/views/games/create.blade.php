@@ -10,6 +10,7 @@
 <body>
 <!-- resources/views/posts/create.blade.php -->
 <form action="{{ route('games.store') }}" method="POST">
+    @csrf
 
 
     <div>

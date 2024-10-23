@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('description');
             $table->string('review');
             $table->string('year');
+            $table->string('genre');
             $table->string('created_by');
             $table->timestamps();
         });

@@ -28,4 +28,11 @@
 ## 2024-10-23
 
 * create pagina gemaakt
+* games pagina aangemakaakt 
+* edit pagina toegevoegd
+
+## 2024-10-27 
+
+* login functie toegevoegd
+* users database geupdate
 * 

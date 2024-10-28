@@ -35,4 +35,10 @@
 
 * login functie toegevoegd
 * users database geupdate
+
+## 2024-10-28
+
+* afbeeldingen toevoegen aan systeem
+* een show pagina toevoegen
+* zorgen dat alle links verbonden zijn met de show pagina in plaats van de index pagina
 * 

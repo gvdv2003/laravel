@@ -11,12 +11,30 @@ use App\Models\Category;
 class GameController extends Controller
 {
 
-    public function index(){
+    public function index(Request $request)
+    {
+        $query = Game::query();
 
-        $games = Game::all();
+        // Zoekfunctie
+        if ($request->has('search')) {
+            $search = $request->input('search');
+            $query->where('name', 'LIKE', "%{$search}%");
+        }
 
-        return view('games.index', compact('games'));
+        // Categorie filter
+        if ($request->has('category_id') && $request->input('category_id') != '') {
+            $query->whereHas('categories', function ($query) use ($request) {
+                $query->where('categories.id', $request->input('category_id'));
+            });
+        }
+
+        $games = $query->get(); // Haal de resultaten op
+
+        $categories = Category::all(); // Alle categorieën voor de filter
+
+        return view('games.index', compact('games', 'categories'));
     }
+
     public function create()
     {
         $categories = Category::all();

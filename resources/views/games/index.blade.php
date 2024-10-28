@@ -24,14 +24,10 @@
             @endif
         </div>
         <!-- Link naar de edit-pagina -->
-        <a href="{{ route('games.edit', $game->id) }}">Edit</a>
+        <a href="{{ route('games.show', $game->id) }}">View Details</a>
 
-        <!-- Delete-formulier -->
-        <form action="{{ route('games.destroy', $game->id) }}" method="POST">
-            @csrf
-            @method('DELETE')
-            <button type="submit" onclick="return confirm('Weet je zeker dat je deze game wilt verwijderen?')">Delete</button>
-        </form>
+
+
     </div>
 @endforeach
 

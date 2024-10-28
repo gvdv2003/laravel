@@ -40,6 +40,9 @@ Route::get('products/{name}', function(string $name = null) {
 });
 
 route::get('/about-us/{id}', [AboutUsController::class,'index',]);
+Route::get('/games/{id}', [GameController::class, 'show'])->name('games.show');
+
+
 
 
 

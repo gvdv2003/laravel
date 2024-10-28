@@ -97,8 +97,17 @@ class GameController extends Controller
         $game->save();
 
         // Redirect terug naar de index-pagina met een succesbericht
-        return redirect()->route('games.index')->with('success', 'Game successfully updated!');
+        return redirect()->route('games.show', $game->id)->with('success', 'Game successfully updated!');
     }
+    public function show($id)
+    {
+        // Haal de game op via het ID
+        $game = Game::findOrFail($id);
+
+        // Geef de game door aan de view
+        return view('games.show', compact('game'));
+    }
+
 
 
 }

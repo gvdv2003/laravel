@@ -14,7 +14,6 @@
     <ul>
         <li><a href="{{ route('games.index') }}">Games</a></li>
         <li><a href="{{ route('games.create') }}">Add Game</a></li>
-        <li><a href="{{ route('categories.index') }}">Categories</a></li>
         @if(Auth::check())
             <li><a href="{{ route('logout') }}">Logout</a></li>
         @else

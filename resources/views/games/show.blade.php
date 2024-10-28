@@ -23,6 +23,8 @@
     <img src="{{ asset('storage/' . $game->image_path) }}" alt="{{ $game->name }}" width="200">
 @endif
 
+<p>Created by: {{ $game->user->name }}</p>
+
 <a href="{{ route('games.index') }}">Back to all games</a>
 
 <a href="{{ route('games.edit', $game->id) }}">Edit Game</a>

@@ -6,14 +6,12 @@ use App\Models\Game;
 use Illuminate\Http\Request;
 use App\Models\Category;
 
-
-
 class GameController extends Controller
 {
-
     public function index(Request $request)
     {
-        $query = Game::query();
+        // Laad de gebruiker met de game
+        $query = Game::with('user'); // Gebruik with om de relatie te laden
 
         // Zoekfunctie
         if ($request->has('search')) {
@@ -35,115 +33,102 @@ class GameController extends Controller
         return view('games.index', compact('games', 'categories'));
     }
 
+
+
     public function create()
     {
         $categories = Category::all();
         return view('games.create', compact('categories'));
     }
 
-
-
     public function store(Request $request)
     {
-
-
         $validatedData = $request->validate([
             'name' => 'required|max:255',
             'description' => 'required',
             'year' => 'required|max:5',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'image_path' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'categories' => 'array', // Verwacht een array van categorie-ID's
+            'categories.*' => 'exists:categories,id' // Zorg ervoor dat elk id bestaat
         ]);
 
         $game = new Game();
         $game->name = $request->input('name');
         $game->description = $request->input('description');
         $game->year = $request->input('year');
-        $game->created_by = 1;
+        $game->created_by = auth()->id();
 
-        $image_path = $request->file('image_path')->storePublicly('images', 'public');
-        $game->image_path = $image_path;
+        if ($request->hasFile('image_path')) {
+            $game->image_path = $request->file('image_path')->storePublicly('images', 'public');
+        }
+
+        $game->save();
 
         if ($request->has('categories')) {
             $game->categories()->sync($request->input('categories'));
         }
 
-        $game->save();
-
         return redirect()->route('games.index')->with('success', 'Game successfully created!');
-
     }
 
     public function destroy($id)
     {
-        // Zoek de game op basis van het ID
         $game = Game::findOrFail($id);
+        // Verwijder de bijbehorende categorieën
+        $game->categories()->detach();
 
         // Verwijder de game
         $game->delete();
 
-        $games = Game::all();
-        // Redirect terug naar de lijstpagina met een succesbericht
-        return redirect()->route('games.index', compact('games'))->with('success', 'Game successfully deleted!');
+        return redirect()->route('games.index')->with('success', 'Game successfully deleted!');
     }
 
-    // Edit pagina voor een specifieke game
     public function edit($id)
     {
-        // Haal de game op met het gegeven ID
         $game = Game::findOrFail($id);
-
         $categories = Category::all();
         return view('games.edit', compact('game', 'categories'));
     }
 
-// Update de game met de nieuwe gegevens
     public function update(Request $request, Game $game)
     {
-
-
-        // Valideer de input
         $validatedData = $request->validate([
             'name' => 'required|max:255',
             'description' => 'required',
             'year' => 'required|max:5',
             'categories' => 'array',
+            'categories.*' => 'exists:categories,id' // Zorg ervoor dat elk id bestaat
         ]);
 
-        // Haal de game op en werk deze bij
         $game->name = $request->input('name');
         $game->description = $request->input('description');
         $game->year = $request->input('year');
+
         if ($request->hasFile('image_path')) {
-            // Verwijder de oude afbeelding, indien aanwezig
             if ($game->image_path) {
                 \Storage::disk('public')->delete($game->image_path);
             }
-
-            // Sla de nieuwe afbeelding op en update het pad
-            $imagePath = $request->file('image_path')->store('images', 'public');
-            $game->image_path = $imagePath;
+            $game->image_path = $request->file('image_path')->store('images', 'public');
         }
-        if ($request->has('categories')) {
+
+        if ($request->filled('categories')) {
             $game->categories()->sync($request->input('categories'));
+        } else {
+            $game->categories()->detach(); // Verwijder categorieën als er geen zijn geselecteerd
         }
 
         $game->save();
 
-
-
-        // Redirect terug naar de index-pagina met een succesbericht
         return redirect()->route('games.show', $game->id)->with('success', 'Game successfully updated!');
     }
+
     public function show($id)
     {
-        // Haal de game op via het ID
-        $game = Game::findOrFail($id);
+        // Haal de game op via het ID met de bijbehorende gebruiker
+        $game = Game::with('user')->findOrFail($id);
 
         // Geef de game door aan de view
         return view('games.show', compact('game'));
     }
-
-
 
 }

@@ -10,8 +10,10 @@ Route::get('/', function () {
 });
 
 
-Route::resource('/games', GameController::class);
 
+Route::middleware(['auth'])->group(function () {
+    Route::resource('games', GameController::class);
+});
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -43,7 +45,7 @@ route::get('/about-us/{id}', [AboutUsController::class,'index',]);
 Route::get('/games/{id}', [GameController::class, 'show'])->name('games.show');
 
 
-Route::resource('games', GameController::class);
+
 
 
 

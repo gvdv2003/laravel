@@ -33,6 +33,7 @@
         <th>Beschrijving</th>
         <th>Jaar</th>
         <th>Categorieën</th>
+        <th>creator</th>
         <th>afbeelding</th>
         <th>Acties</th>
     </tr>
@@ -48,6 +49,7 @@
                     {{ $category->name }}@if (!$loop->last), @endif
                 @endforeach
             </td>
+            <td>{{ $game->user->name }}</p></td>
             <td>
                 @if($game->image_path)
                     <img src="{{ asset('storage/' . $game->image_path) }}" alt="Game Image" width="150">
@@ -55,12 +57,6 @@
             </td>
             <td>
                 <a href="{{ route('games.show', $game->id) }}">Bekijk</a>
-                <a href="{{ route('games.edit', $game->id) }}">Bewerk</a>
-                <form action="{{ route('games.destroy', $game->id) }}" method="POST" style="display:inline;">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit">Verwijder</button>
-                </form>
             </td>
         </tr>
     @endforeach

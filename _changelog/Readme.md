@@ -41,4 +41,7 @@
 * afbeeldingen toevoegen aan systeem
 * een show pagina toevoegen
 * zorgen dat alle links verbonden zijn met de show pagina in plaats van de index pagina
+* veel op veel relaties met catogorieen toegevoegd
+* login functie aangepast zodat deze verplicht is
+* layout toegevoegd
 * 

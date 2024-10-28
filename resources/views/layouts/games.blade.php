@@ -15,7 +15,12 @@
         <li><a href="{{ route('games.index') }}">Games</a></li>
         <li><a href="{{ route('games.create') }}">Add Game</a></li>
         @if(Auth::check())
-            <li><a href="{{ route('logout') }}">Logout</a></li>
+            <li>
+                <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+                    @csrf
+                    <button type="submit">Logout</button>
+                </form>
+            </li>
         @else
             <li><a href="{{ route('login') }}">Login</a></li>
             <li><a href="{{ route('register') }}">Register</a></li>

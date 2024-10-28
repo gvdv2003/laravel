@@ -71,7 +71,7 @@ class GameController extends Controller
     }
 
 // Update de game met de nieuwe gegevens
-    public function update(Request $request, $id)
+    public function update(Request $request, Game $game)
     {
         // Valideer de input
         $validatedData = $request->validate([
@@ -81,10 +81,19 @@ class GameController extends Controller
         ]);
 
         // Haal de game op en werk deze bij
-        $game = Game::findOrFail($id);
         $game->name = $request->input('name');
         $game->description = $request->input('description');
         $game->year = $request->input('year');
+        if ($request->hasFile('image_path')) {
+            // Verwijder de oude afbeelding, indien aanwezig
+            if ($game->image_path) {
+                \Storage::disk('public')->delete($game->image_path);
+            }
+
+            // Sla de nieuwe afbeelding op en update het pad
+            $imagePath = $request->file('image_path')->store('images', 'public');
+            $game->image_path = $imagePath;
+        }
         $game->save();
 
         // Redirect terug naar de index-pagina met een succesbericht

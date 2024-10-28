@@ -11,7 +11,7 @@
 
 <!-- resources/views/games/edit.blade.php -->
 
-<form action="{{ route('games.update', $game->id) }}" method="POST">
+<form action="{{ route('games.update', $game->id) }}" method="POST" enctype="multipart/form-data">
     @csrf
     @method('PUT') <!-- Methode om aan te geven dat het een PUT-verzoek is -->
 
@@ -29,6 +29,11 @@
         <label for="year">Year:</label>
         <input type="text" id="year" name="year" value="{{ old('year', $game->year) }}" required>
     </div>
+
+    <div>
+       <label for="image_path">Edit Image:</label>
+       <input value="{{ old('image_path' , $game->image_path) }}" type="file" id="image_path" name="image_path">
+   </div>
 
     <button type="submit">Update Game</button>
 </form>

@@ -10,6 +10,6 @@ class Game extends Model
 {
 
 
-    protected $fillable = ['name', 'description', 'year', 'created_by'];
+    protected $fillable = ['name', 'description', 'year', 'created_by', 'image_path'];
 
 }

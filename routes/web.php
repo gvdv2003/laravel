@@ -30,8 +30,8 @@ Route::middleware('auth')->group(function () {
 });
 
 
-Route::get('/games/{id}/edit', [GameController::class, 'edit'])->name('games.edit');
-Route::put('/games/{id}', [GameController::class, 'update'])->name('games.update');
+//Route::get('/games/{id}/edit', [GameController::class, 'edit'])->name('games.edit');
+//Route::put('/games/{id}', [GameController::class, 'update'])->name('games.update');
 
 Route::get('products/{name}', function(string $name = null) {
     return view('products', [

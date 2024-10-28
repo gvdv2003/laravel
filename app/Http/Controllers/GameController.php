@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Game;
 use Illuminate\Http\Request;
+use App\Models\Category;
+
 
 
 class GameController extends Controller
@@ -17,8 +19,10 @@ class GameController extends Controller
     }
     public function create()
     {
-        return view('games.create');
+        $categories = Category::all();
+        return view('games.create', compact('categories'));
     }
+
 
 
     public function store(Request $request)
@@ -30,6 +34,7 @@ class GameController extends Controller
             'description' => 'required',
             'year' => 'required|max:5',
             'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'categories' => 'array', // Verwacht een array van categorie-ID's
         ]);
 
         $game = new Game();
@@ -40,6 +45,10 @@ class GameController extends Controller
 
         $image_path = $request->file('image_path')->storePublicly('images', 'public');
         $game->image_path = $image_path;
+
+        if ($request->has('categories')) {
+            $game->categories()->sync($request->input('categories'));
+        }
 
         $game->save();
 
@@ -66,18 +75,21 @@ class GameController extends Controller
         // Haal de game op met het gegeven ID
         $game = Game::findOrFail($id);
 
-        // Stuur de game naar de edit-view
-        return view('games.edit', compact('game'));
+        $categories = Category::all();
+        return view('games.edit', compact('game', 'categories'));
     }
 
 // Update de game met de nieuwe gegevens
     public function update(Request $request, Game $game)
     {
+
+
         // Valideer de input
         $validatedData = $request->validate([
             'name' => 'required|max:255',
             'description' => 'required',
             'year' => 'required|max:5',
+            'categories' => 'array',
         ]);
 
         // Haal de game op en werk deze bij
@@ -94,7 +106,13 @@ class GameController extends Controller
             $imagePath = $request->file('image_path')->store('images', 'public');
             $game->image_path = $imagePath;
         }
+        if ($request->has('categories')) {
+            $game->categories()->sync($request->input('categories'));
+        }
+
         $game->save();
+
+
 
         // Redirect terug naar de index-pagina met een succesbericht
         return redirect()->route('games.show', $game->id)->with('success', 'Game successfully updated!');

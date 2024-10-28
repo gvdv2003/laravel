@@ -28,6 +28,15 @@
         <input type="number" id="year" name="year" required>
     </div>
 
+    @foreach ($categories as $category)
+        <label>
+            <input type="checkbox" name="categories[]" value="{{ $category->id }}"
+                {{ in_array($category->id, old('categories', $game->categories->pluck('id')->toArray() ?? [])) ? 'checked' : '' }}>
+            {{ $category->name }}
+        </label>
+    @endforeach
+
+
     <div>
         <label for="image_path">Upload Image:</label>
         <input type="file" id="image_path" name="image_path">

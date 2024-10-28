@@ -11,6 +11,14 @@
 <p><strong>Description:</strong> {{ $game->description }}</p>
 <p><strong>Year:</strong> {{ $game->year }}</p>
 
+<h3>Categories:</h3>
+<ul>
+    @foreach ($game->categories as $category)
+        <li>{{ $category->name }}</li>
+    @endforeach
+</ul>
+
+
 @if($game->image_path)
     <img src="{{ asset('storage/' . $game->image_path) }}" alt="{{ $game->name }}" width="200">
 @endif

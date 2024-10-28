@@ -13,10 +13,16 @@
 
 @foreach($games as $game)
     <div>
-        <h2>{{ $game->name }}</h2>
-        <p>{{ $game->description }}</p>
-        <p>Released in: {{ $game->year }}</p>
+        <div>
+            <h2>{{ $game->name }}</h2>
+            <p>{{ $game->description }}</p>
+            <p>Released in: {{ $game->year }}</p>
 
+            <!-- Controleer of er een afbeelding is en toon deze -->
+            @if($game->image_path)
+                <img src="{{ asset('storage/' . $game->image_path) }}" alt="Game Image" width="150">
+            @endif
+        </div>
         <!-- Link naar de edit-pagina -->
         <a href="{{ route('games.edit', $game->id) }}">Edit</a>
 

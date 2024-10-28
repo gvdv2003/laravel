@@ -24,10 +24,12 @@ class GameController extends Controller
     public function store(Request $request)
     {
 
+
         $validatedData = $request->validate([
             'name' => 'required|max:255',
             'description' => 'required',
             'year' => 'required|max:5',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
         $game = new Game();
@@ -35,10 +37,14 @@ class GameController extends Controller
         $game->description = $request->input('description');
         $game->year = $request->input('year');
         $game->created_by = 1;
-        $game->save();
-        $games = Game::all();
 
-        return view('games.index',  compact('games'));
+        $image_path = $request->file('image_path')->storePublicly('images', 'public');
+        $game->image_path = $image_path;
+
+        $game->save();
+
+        return redirect()->route('games.index')->with('success', 'Game successfully created!');
+
     }
 
     public function destroy($id)

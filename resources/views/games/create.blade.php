@@ -9,7 +9,7 @@
 </head>
 <body>
 <!-- resources/views/posts/create.blade.php -->
-<form action="{{ route('games.store') }}" method="POST">
+<form action="{{ route('games.store') }}" method="POST" enctype="multipart/form-data">
     @csrf
 
 
@@ -26,6 +26,11 @@
     <div>
         <label for="year">year</label>
         <input type="number" id="year" name="year" required>
+    </div>
+
+    <div>
+        <label for="image_path">Upload Image:</label>
+        <input type="file" id="image_path" name="image_path">
     </div>
 
     <button type="submit">Submit</button>

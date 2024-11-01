@@ -27,13 +27,24 @@
 
 <a href="{{ route('games.index') }}">Back to all games</a>
 
-<a href="{{ route('games.edit', $game->id) }}">Edit Game</a>
+@auth
+    @if(auth()->id() == $game->created_by)
+        <a href="{{ route('games.edit', $game->id) }}">Edit</a>
+        <form action="{{ route('games.destroy', $game->id) }}" method="POST">
+            @csrf
+            @method('DELETE')
+            <button type="submit" onclick="return confirm('Are you sure you want to delete this game?')">Delete Game</button>
+        </form>
+    @else
+        {{-- Dit is om te debuggen --}}
 
-<form action="{{ route('games.destroy', $game->id) }}" method="POST" style="display:inline;">
-    @csrf
-    @method('DELETE')
-    <button type="submit" onclick="return confirm('Are you sure you want to delete this game?')">Delete Game</button>
-</form>
+    @endif
+@endauth
+
+
+
+
+
 
 </body>
 </html>

@@ -74,6 +74,16 @@ class GameController extends Controller
     public function destroy($id)
     {
         $game = Game::findOrFail($id);
+
+        // Log de user ID en de created_by voor debugging
+        \Log::info('User ID:', ['user_id' => auth()->id()]);
+        \Log::info('Created By:', ['created_by' => $game->created_by]);
+
+        // Controleer of de ingelogde gebruiker de eigenaar is
+        if (auth()->id() !== (int)$game->created_by) {
+            return redirect()->route('games.index')->with('error', 'You are not authorized to delete this game.');
+        }
+
         // Verwijder de bijbehorende categorieën
         $game->categories()->detach();
 
@@ -86,12 +96,30 @@ class GameController extends Controller
     public function edit($id)
     {
         $game = Game::findOrFail($id);
+
+        // Log de user ID en de created_by voor debugging
+        \Log::info('User ID:', ['user_id' => auth()->id()]);
+        \Log::info('Created By:', ['created_by' => $game->created_by]);
+
+        // Controleer of de ingelogde gebruiker de eigenaar is
+        if (auth()->id() !== (int)$game->created_by) {
+            return redirect()->route('games.index')->with('error', 'You are not authorized to edit this game.');
+        }
+
         $categories = Category::all();
         return view('games.edit', compact('game', 'categories'));
     }
 
+
+
     public function update(Request $request, Game $game)
     {
+        // Controleer of de ingelogde gebruiker de eigenaar is
+        if (auth()->id() !== $game->created_by) {
+            return redirect()->route('games.index')->with('error', 'You are not authorized to update this game.');
+        }
+
+        // Valideer de input
         $validatedData = $request->validate([
             'name' => 'required|max:255',
             'description' => 'required',
@@ -100,10 +128,12 @@ class GameController extends Controller
             'categories.*' => 'exists:categories,id' // Zorg ervoor dat elk id bestaat
         ]);
 
+        // Update game-gegevens
         $game->name = $request->input('name');
         $game->description = $request->input('description');
         $game->year = $request->input('year');
 
+        // Verwerk de afbeelding, indien geüpload
         if ($request->hasFile('image_path')) {
             if ($game->image_path) {
                 \Storage::disk('public')->delete($game->image_path);
@@ -111,6 +141,7 @@ class GameController extends Controller
             $game->image_path = $request->file('image_path')->store('images', 'public');
         }
 
+        // Update categorieën
         if ($request->filled('categories')) {
             $game->categories()->sync($request->input('categories'));
         } else {
@@ -121,6 +152,7 @@ class GameController extends Controller
 
         return redirect()->route('games.show', $game->id)->with('success', 'Game successfully updated!');
     }
+
 
     public function show($id)
     {

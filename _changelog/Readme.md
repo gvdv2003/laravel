@@ -44,4 +44,6 @@
 * veel op veel relaties met catogorieen toegevoegd
 * login functie aangepast zodat deze verplicht is
 * layout toegevoegd
-* 
+
+## 2024-1-1
+*

@@ -46,4 +46,8 @@
 * layout toegevoegd
 
 ## 2024-1-1
-*
+* css toegepast
+* login functie aangepast 
+* edit functie op gebruiker aangepast
+* admin functionaliteiten toegevoegd
+

@@ -1,13 +1,8 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="{{ asset('') }}">
-    <title>Game Details</title>
-</head>
-<body>
+@extends('layouts.games')  <!-- Gebruik de layout die je hebt gemaakt -->
+
+@section('title', 'Game Show')  <!-- Voeg een titel toe voor de pagina -->
+
+@section('content')  <!-- Dit is het content-gedeelte dat in de layout wordt weergegeven -->
 <h1>{{ $game->name }}</h1>
 <p><strong>Description:</strong> {{ $game->description }}</p>
 <p><strong>Year:</strong> {{ $game->year }}</p>
@@ -42,10 +37,7 @@
     @endif
 @endauth
 
+@endsection
 
 
 
-
-
-</body>
-</html>

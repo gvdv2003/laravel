@@ -45,4 +45,9 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function games()
+    {
+        return $this->hasMany(Game::class, 'created_by'); // Dit gaat ervan uit dat 'created_by' de gebruiker aangeeft die de game heeft aangemaakt
+    }
 }

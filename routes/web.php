@@ -5,8 +5,13 @@ use App\Http\Controllers\GameController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
+
+Route::patch('/games/admin/{id}/toggleVisibility', [GameController::class, 'toggleVisibility'])->name('admin.toggleVisibility');
+
 Route::get('/', [GameController::class, 'index'])->name('games.index');
 
+
+Route::get('/games/admin', [GameController::class, 'adminIndex'])->name('games.admin');
 // Resource route voor games, dit omvat alle noodzakelijke routes
 Route::resource('/games', GameController::class)->except(['index', 'show']); // Uitsluiten van index en show
 

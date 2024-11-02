@@ -16,8 +16,11 @@ class Game extends Model
         'year',
         'image_path',
         'created_by',
-        'approved',
         'visible'
+    ];
+
+    protected $attributes = [
+        'visible' => false,
     ];
 
 

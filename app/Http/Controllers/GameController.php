@@ -45,31 +45,69 @@ class GameController extends Controller
 
     public function store(Request $request)
     {
+        // Valideer de gegevens
+        \Log::info('Ontvangen request data:', $request->all());
+        \Log::info('Validatie begint voor het aanmaken van een game');
+
+
         $validatedData = $request->validate([
             'name' => 'required|max:255',
             'description' => 'required',
-            'year' => 'required|max:5',
+            'year' => 'required|integer|min:1900|max:' . date('Y'),
             'image_path' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'categories' => 'array',
             'categories.*' => 'exists:categories,id'
         ]);
 
-        $game = new Game($validatedData);
-        $game->created_by = auth()->id();
-        $game->visible = auth()->user()->admin ? true : false; // Standaard onzichtbaar als geen admin
+        \Log::info('Validatie succesvol, data:', $validatedData);
 
-        if ($request->hasFile('image_path')) {
-            $game->image_path = $request->file('image_path')->store('images', 'public');
+        try {
+            // Controleer of de gebruiker ingelogd is
+            $user = auth()->user();
+            if (!$user) {
+                return redirect()->back()->with('error', 'Je moet ingelogd zijn om een game te maken.');
+            }
+
+            \Log::info('Game aanmaken door user', ['user_id' => $user->id, 'is_admin' => $user->admin]);
+
+            // Maak een nieuwe Game-instantie aan
+            $game = new Game();
+            $game->name = $validatedData['name'];
+            $game->description = $validatedData['description'];
+            $game->year = $validatedData['year'];
+            $game->created_by = $user->id;
+
+            // Zet de zichtbaarheid op false
+            $game->visible = false;
+
+            // Verwerk de afbeelding indien aanwezig
+            if ($request->hasFile('image_path')) {
+                $game->image_path = $request->file('image_path')->store('images', 'public');
+                \Log::info('Afbeeldingspad opgeslagen', ['image_path' => $game->image_path]);
+            }
+
+            // Sla de game op
+            if ($game->save()) {
+                \Log::info('Game succesvol opgeslagen', ['game_id' => $game->id]);
+            } else {
+                \Log::error('Game kon niet worden opgeslagen', ['game' => $game]);
+                return redirect()->back()->with('error', 'Er is een fout opgetreden bij het aanmaken van de game. Probeer het opnieuw.');
+            }
+
+            // Koppel categorieën aan de game, indien aanwezig
+            if ($request->has('categories')) {
+                $game->categories()->sync($validatedData['categories']);
+                \Log::info('Categorieën gekoppeld aan game', ['categories' => $validatedData['categories']]);
+            }
+
+            return redirect()->route('games.index')->with('success', 'Game succesvol aangemaakt!');
+        } catch (\Exception $e) {
+            // Log de fout en stuur een foutmelding terug naar de gebruiker
+            \Log::error('Fout bij het aanmaken van de game', ['error' => $e->getMessage()]);
+            return redirect()->back()->with('error', 'Er is een fout opgetreden bij het aanmaken van de game: ' . $e->getMessage());
         }
-
-        $game->save();
-
-        if ($request->filled('categories')) {
-            $game->categories()->sync($request->input('categories'));
-        }
-
-        return redirect()->route('games.index')->with('success', 'Game succesvol aangemaakt!');
     }
+
 
     public function destroy($id)
     {

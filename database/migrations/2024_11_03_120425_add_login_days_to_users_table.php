@@ -9,11 +9,10 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
     {
-        Schema::table('games', function (Blueprint $table) {
-
-
+        Schema::table('users', function (Blueprint $table) {
+            $table->json('login_days')->nullable(); // JSON om unieke data op te slaan
         });
     }
 
@@ -22,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-
+        Schema::table('users', function (Blueprint $table) {
+            //
+        });
     }
 };

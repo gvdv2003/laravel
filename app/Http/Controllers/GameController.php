@@ -114,7 +114,7 @@ class GameController extends Controller
         $game = Game::findOrFail($id);
 
         // Controleer of de ingelogde gebruiker de eigenaar is of admin
-        if (auth()->id() !== $game->created_by && !auth()->user()->admin) {
+        if (auth()->id() !== (int)$game->created_by && !auth()->user()->admin) {
             return redirect()->route('games.index')->with('error', 'Je bent niet bevoegd om deze game te verwijderen.');
         }
 
@@ -128,10 +128,15 @@ class GameController extends Controller
     {
         $game = Game::findOrFail($id);
 
+        \Log::info('Update-methode aangeroepen voor game:', ['game_id' => $game->id]);
+
+        \Log::info('Ingelogde gebruiker:', ['user_id' => auth()->id()]);
+        \Log::info('Game created by:', ['created_by' => $game->created_by]);
         // Controleer of de ingelogde gebruiker de eigenaar is of admin
-        if (auth()->id() !== $game->created_by && !auth()->user()->admin) {
-            return redirect()->route('games.index')->with('error', 'Je bent niet bevoegd om deze game te bewerken.');
+        if (auth()->id() !== (int)$game->created_by && !auth()->user()->admin) {
+            return redirect()->route('games.index')->with('error', 'Je bent niet bevoegd om deze game bij te werken.');
         }
+
 
         $categories = Category::all();
         return view('games.edit', compact('game', 'categories'));
@@ -167,7 +172,8 @@ class GameController extends Controller
 
     public function show($id)
     {
-        $game = Game::with('user')->findOrFail($id);
+        // Laad de game met de bijbehorende user en reviews
+        $game = Game::with(['user', 'reviews.user'])->findOrFail($id);
 
         return view('games.show', compact('game'));
     }
@@ -200,4 +206,7 @@ class GameController extends Controller
 
         return redirect()->route('games.admin')->with('success', 'Zichtbaarheid aangepast!');
     }
+
+
+
 }

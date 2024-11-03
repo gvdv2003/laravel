@@ -42,6 +42,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::post('/games/{game}/reviews', [\App\Http\Controllers\ReviewController::class, 'store'])->name('reviews.store');
+Route::delete('/reviews/{review}', [\App\Http\Controllers\ReviewController::class, 'destroy'])->name('reviews.destroy');
+
 Route::get('products/{name}', function (string $name = null) {
     return view('products', [
         'name' => $name

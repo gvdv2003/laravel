@@ -1,8 +1,8 @@
-@extends('layouts.games')  <!-- Gebruik de layout die je hebt gemaakt -->
+@extends('layouts.games')
 
-@section('title', 'Game Create')  <!-- Voeg een titel toe voor de pagina -->
+@section('title', 'Game Create')
 
-@section('content')  <!-- Dit is het content-gedeelte dat in de layout wordt weergegeven -->
+@section('content')
 <h1>Nieuwe Game Aanmaken</h1>
 
 <form id="game-form" action="{{ route('games.store') }}" method="POST" enctype="multipart/form-data">
@@ -55,10 +55,10 @@
         const file = fileInput.files[0];
 
         if (file) {
-            // Controleer de bestandsgrootte (bijv. 2MB)
+
             const maxSize = 2 * 1024 * 1024; // 2MB in bytes
             if (file.size > maxSize) {
-                event.preventDefault(); // Voorkom dat het formulier wordt verzonden
+                event.preventDefault();
                 alert('De afbeelding is te groot. Maximaal toegestaan is 2MB.');
             }
         }

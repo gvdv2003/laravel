@@ -37,7 +37,7 @@
     @forelse ($game->reviews as $review)
         <div>
 
-            @if($review->rating) <!-- Controleer of er een rating is -->
+            @if($review->rating)
             <p><strong>Beoordeling:</strong> {{ $review->rating }} / 5</p>
             @endif
             <p>{{ $review->review_text }}</p>

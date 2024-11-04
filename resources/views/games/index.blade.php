@@ -1,12 +1,12 @@
 <!-- resources/views/games/index.blade.php -->
-@extends('layouts.games')  <!-- Gebruik de layout die je hebt gemaakt -->
+@extends('layouts.games')
 
-@section('title', 'Game Index')  <!-- Voeg een titel toe voor de pagina -->
+@section('title', 'Game Index')
 
-@section('content')  <!-- Dit is het content-gedeelte dat in de layout wordt weergegeven -->
+@section('content')
 <h1>Game Index</h1>
 
-<!-- Zoekformulier -->
+
 <form action="{{ route('games.index') }}" method="GET">
     <input type="text" name="search" placeholder="Zoek op naam" value="{{ request('search') }}">
 
@@ -22,7 +22,7 @@
     <button type="submit">Zoek</button>
 </form>
 
-<!-- Tabel met games -->
+
 <table>
     <thead>
     <tr>

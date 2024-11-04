@@ -10,29 +10,29 @@ class GameController extends Controller
 {
     public function index(Request $request)
     {
-        // Laad alleen zichtbare games voor niet-admins
+
         $query = Game::where('visible', true)->with('user');
 
         if (auth()->check() && auth()->user()->admin) {
             $query = Game::with('user'); // Admins kunnen alle games zien
         }
 
-        // Zoekfunctie
+
         if ($request->has('search')) {
             $search = $request->input('search');
             $query->where('name', 'LIKE', "%{$search}%");
         }
 
-        // Categorie filter
+
         if ($request->has('category_id') && $request->input('category_id') != '') {
             $query->whereHas('categories', function ($query) use ($request) {
                 $query->where('categories.id', $request->input('category_id'));
             });
         }
 
-        $games = $query->get(); // Haal de resultaten op
+        $games = $query->get();
 
-        $categories = Category::all(); // Alle categorieën voor de filter
+        $categories = Category::all();
 
         return view('games.index', compact('games', 'categories'));
     }
@@ -45,7 +45,7 @@ class GameController extends Controller
 
     public function store(Request $request)
     {
-        // Valideer de gegevens
+
         \Log::info('Ontvangen request data:', $request->all());
         \Log::info('Validatie begint voor het aanmaken van een game');
 
@@ -62,7 +62,7 @@ class GameController extends Controller
         \Log::info('Validatie succesvol, data:', $validatedData);
 
         try {
-            // Controleer of de gebruiker ingelogd is
+
             $user = auth()->user();
             if (!$user) {
                 return redirect()->back()->with('error', 'Je moet ingelogd zijn om een game te maken.');
@@ -70,23 +70,23 @@ class GameController extends Controller
 
             \Log::info('Game aanmaken door user', ['user_id' => $user->id, 'is_admin' => $user->admin]);
 
-            // Maak een nieuwe Game-instantie aan
+
             $game = new Game();
             $game->name = $validatedData['name'];
             $game->description = $validatedData['description'];
             $game->year = $validatedData['year'];
             $game->created_by = $user->id;
 
-            // Zet de zichtbaarheid op false
+
             $game->visible = false;
 
-            // Verwerk de afbeelding indien aanwezig
+
             if ($request->hasFile('image_path')) {
                 $game->image_path = $request->file('image_path')->store('images', 'public');
                 \Log::info('Afbeeldingspad opgeslagen', ['image_path' => $game->image_path]);
             }
 
-            // Sla de game op
+
             if ($game->save()) {
                 \Log::info('Game succesvol opgeslagen', ['game_id' => $game->id]);
             } else {
@@ -94,7 +94,7 @@ class GameController extends Controller
                 return redirect()->back()->with('error', 'Er is een fout opgetreden bij het aanmaken van de game. Probeer het opnieuw.');
             }
 
-            // Koppel categorieën aan de game, indien aanwezig
+
             if ($request->has('categories')) {
                 $game->categories()->sync($validatedData['categories']);
                 \Log::info('Categorieën gekoppeld aan game', ['categories' => $validatedData['categories']]);
@@ -102,7 +102,7 @@ class GameController extends Controller
 
             return redirect()->route('games.index')->with('success', 'Game succesvol aangemaakt!');
         } catch (\Exception $e) {
-            // Log de fout en stuur een foutmelding terug naar de gebruiker
+
             \Log::error('Fout bij het aanmaken van de game', ['error' => $e->getMessage()]);
             return redirect()->back()->with('error', 'Er is een fout opgetreden bij het aanmaken van de game: ' . $e->getMessage());
         }
@@ -113,7 +113,7 @@ class GameController extends Controller
     {
         $game = Game::findOrFail($id);
 
-        // Controleer of de ingelogde gebruiker de eigenaar is of admin
+
         if (auth()->id() !== (int)$game->created_by && !auth()->user()->admin) {
             return redirect()->route('games.index')->with('error', 'Je bent niet bevoegd om deze game te verwijderen.');
         }
@@ -132,7 +132,7 @@ class GameController extends Controller
 
         \Log::info('Ingelogde gebruiker:', ['user_id' => auth()->id()]);
         \Log::info('Game created by:', ['created_by' => $game->created_by]);
-        // Controleer of de ingelogde gebruiker de eigenaar is of admin
+
         if (auth()->id() !== (int)$game->created_by && !auth()->user()->admin) {
             return redirect()->route('games.index')->with('error', 'Je bent niet bevoegd om deze game bij te werken.');
         }
@@ -172,7 +172,7 @@ class GameController extends Controller
 
     public function show($id)
     {
-        // Laad de game met de bijbehorende user en reviews
+
         $game = Game::with(['user', 'reviews.user'])->findOrFail($id);
 
         return view('games.show', compact('game'));

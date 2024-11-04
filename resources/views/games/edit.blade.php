@@ -1,14 +1,14 @@
-@extends('layouts.games')  <!-- Gebruik de layout die je hebt gemaakt -->
+@extends('layouts.games')
 
-@section('title', 'game edit')  <!-- Voeg een titel toe voor de pagina -->
+@section('title', 'game edit')
 
-@section('content')  <!-- Dit is het content-gedeelte dat in de layout wordt weergegeven -->
+@section('content')
 
-<!-- resources/views/games/edit.blade.php -->
+
 
 <form action="{{ route('games.update', $game->id) }}" method="POST" enctype="multipart/form-data">
     @csrf
-    @method('PUT') <!-- Methode om aan te geven dat het een PUT-verzoek is -->
+    @method('PUT')
 
     <div>
         <label for="name">Name:</label>
